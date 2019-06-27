@@ -147,37 +147,31 @@
 <script>
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import db from '../../config/connectionDb'
 
 export default {
   data () {
     return {
       inputType1: '',
       inputType2: '',
-      wordNumber1: 0,
-      wordNumber2: 0,
       score1: 0,
       score2: 0,
-      wordApi: [
-        'Joko',
-        'Budi',
-        'Amir',
-        'Anto',
-        'Made',
-        'Robby',
-        'Mikel'
-      ],
+      wordApi: [],
       wordPlayer1: [],
       wordPlayer2: [],
       currentWord1: '',
       currentWord2: '',
       showWinner: false,
-      runTime: 100
+      runTime: 100,
+      roomData: [],
+      roomId: '5xJVZvv9KvHfYuoamF4C'
     }
   },
   watch: {
     score1 () {
       if (this.score1 === this.wordApi.length || (this.score1 > this.score2 && this.runTime === 0)) {
         console.log('yang menang adalah player1')
+        this.clearRoom()
         Swal.fire(
           'Player 1 Win!',
           'Back to homepage',
@@ -189,6 +183,7 @@ export default {
     score2 () {
       if (this.score2 === this.wordApi.length || (this.score2 > this.score1 && this.runTime === 0)) {
         console.log('yang menang adalah player1')
+        this.clearRoom()
         Swal.fire(
           'Player 2 Win!',
           'Back to homepage',
@@ -198,45 +193,103 @@ export default {
     },
 
     inputType1 () {
-      if (this.inputType1 === this.wordApi[this.wordNumber1]) {
-        this.score1++
-        this.wordNumber1++
-        this.inputType1 = ''
-        this.setCurrentWord(1)
+      if (this.inputType1 === this.wordApi[this.score1]) {
+        this.wordPlayer1.push(this.wordApi[this.score1])
+        let sendData = {
+          finishedUser1: this.wordPlayer1
+        }
+        db.collection('rooms').doc(this.roomId).update(sendData)
+          .then(() => {
+            this.inputType1 = ''
+            this.setCurrentWord(1)
+          })
+          .catch(function (error) {
+            console.error('Error writing document: ', error)
+          })
       }
     },
     inputType2 () {
-      if (this.inputType2 === this.wordApi[this.wordNumber2]) {
-        this.score2++
-        this.wordNumber2++
-        this.inputType2 = ''
-        this.setCurrentWord(2)
+      if (this.inputType2 === this.wordApi[this.score2]) {
+        this.wordPlayer2.push(this.wordApi[this.score2])
+        let sendData = {
+          finishedUser2: this.wordPlayer2
+        }
+        db.collection('rooms').doc(this.roomId).update(sendData)
+          .then(() => {
+            this.inputType2 = ''
+            this.setCurrentWord(2)
+          })
+          .catch(function (error) {
+            console.error('Error writing document: ', error)
+          })
       }
     }
   },
   methods: {
+    clearRoom () {
+      let sendData = {
+        dictionaryApi: [],
+        finishedUser1: [],
+        finishedUser2: [],
+        statusStart: false
+      }
+      db.collection('rooms').doc(this.roomId).set(sendData)
+        .then(() => {
+          this.wordApi = []
+          this.finishedUser1 = []
+          this.finishedUser2 = []
+          this.score1 = 0
+          this.score2 = 0
+          console.log('Success clear Room!')
+        })
+        .catch(function (error) {
+          console.error('Error writing document: ', error)
+        })
+    },
     setCurrentWord (val) {
       if (val === 1) {
-        this.currentWord1 = this.wordApi[this.wordNumber1]
+        this.currentWord1 = this.wordApi[this.score1]
       } else if (val === 2) {
-        this.currentWord2 = this.wordApi[this.wordNumber2]
+        this.currentWord2 = this.wordApi[this.score2]
       }
     },
     startGame () {
       axios({
         method: 'get',
-        url: 'https://random-word-api.herokuapp.com//word?key=MHFSZA9O&number=30'
+        url: 'https://random-word-api.herokuapp.com//word?key=MHFSZA9O&number=3'
       })
         .then(({ data }) => {
-
+          let sendData = {
+            dictionaryApi: data,
+            statusStart: true,
+            finishedUser1: [],
+            finishedUser2: []
+          }
+          return db.collection('rooms').doc(this.roomId).update(sendData)
         })
-      this.wordNumber1 = 0
-      this.score1 = 0
-      this.wordNumber2 = 0
-      this.score2 = 0
-      this.setCurrentWord(1)
-      this.setCurrentWord(2)
+        .then(() => {
+          this.score1 = 0
+          this.score2 = 0
+          this.setCurrentWord(1)
+          this.setCurrentWord(2)
+        })
+        .catch(function (error) {
+          console.error('Error writing document: ', error)
+        })
     }
+  },
+  created () {
+    db.collection('rooms').doc(this.roomId)
+      .onSnapshot((doc) => {
+        console.log('masuk created berapa kali')
+        this.wordApi = doc.data().dictionaryApi
+        this.wordPlayer1 = doc.data().finishedUser1
+        this.wordPlayer2 = doc.data().finishedUser2
+        this.score1 = this.wordPlayer1.length
+        this.score2 = this.wordPlayer2.length
+        this.setCurrentWord(1)
+        this.setCurrentWord(2)
+      })
   }
 }
 </script>
