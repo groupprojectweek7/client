@@ -5,18 +5,30 @@
       <Game v-if="roomId"></Game>
     </v-content>
   </v-app>
+
 </template>
 
 <script>
-import Homepage from '@/components/Homepage.vue'
-import Game from '@/components/Game.vue'
-
-export default {
-  name: 'App',
-  components: {
-    Homepage,
-    Game
+  export default {
+    data () {
+      return {
+        value: 0,
+      query: false,
+      show: true,
+      interval: 0,
+      activeColor:"green",
+      start: false,
+    }
   },
+
+  mounted () {
+    this.queryAndIndeterminate()
+  },
+
+  beforeDestroy () {
+    clearInterval(this.interval)
+  },
+
   data () {
     return {
       roomId: null
@@ -30,5 +42,4 @@ export default {
   created () {
     this.roomId = localStorage.getItem('roomId')
   }
-}
 </script>
