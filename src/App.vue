@@ -23,12 +23,12 @@ export default {
     }
   },
   methods: {
-    setRoomId(id) {
-      this.roomId = id;
+    setRoomId (id) {
+      this.roomId = id
     }
   },
-  created(){
-    this.roomId = localStorage.getItem('roomId');
+  created () {
+    this.roomId = localStorage.getItem('roomId')
   }
 }
 </script>

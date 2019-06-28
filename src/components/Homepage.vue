@@ -23,8 +23,8 @@ export default {
     }
   },
   methods: {
-    setRoomId(val) {
-      this.$emit('setRoomId', val);
+    setRoomId (val) {
+      this.$emit('setRoomId', val)
     }
   }
 }

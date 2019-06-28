@@ -14,59 +14,58 @@
 </template>
 
 <script>
-  import db from '../../config/connectionDb'
-  import {
-    log
-  } from 'util'
+import db from '../../config/connectionDb'
+import {
+  log
+} from 'util'
 
-  export default {
-    props: ['playerName'],
-    data() {
-      return {
-        players: [],
-        roomData: {},
-        showJoinModal: false,
-        playerAmount: 0
+export default {
+  props: ['playerName'],
+  data () {
+    return {
+      players: [],
+      roomData: {},
+      showJoinModal: false,
+      playerAmount: 0
+    }
+  },
+  methods: {
+    addPlayerToRoom (val) {
+      if (this.playerName[0] == ' ' || this.playerName.length == 0) {
+        // swal nama harus isi
+        return ''
       }
-    },
-    methods: {
-      addPlayerToRoom(val) {
-        if (this.playerName[0] == ' ' || this.playerName.length == 0) {
-          // swal nama harus isi
-          return ''
-        }
-        db.collection('rooms').doc(val)
-          .onSnapshot((doc) => {
-            this.roomData = {
-              id: doc.id,
-              ...doc.data(),
-            }
+      db.collection('rooms').doc(val)
+        .onSnapshot((doc) => {
+          this.roomData = {
+            id: doc.id,
+            ...doc.data()
+          }
 
-            localStorage.setItem('roomId', this.roomData.id);
+          localStorage.setItem('roomId', this.roomData.id)
 
-            if (this.roomData.user1.length == 0) {
-              db.collection("rooms").doc(val).update({
-                user1: this.playerName
-              }).then(() => {
-                console.log("Document successfully updated!");
-              }).catch(function (error) {
-                console.error("Error removing document: ", error);
-              });
-            } else if (this.roomData.user2.length == 0) {
-              db.collection("rooms").doc(val).update({
-                user2: this.playerName
-              }).then(() => {
-                console.log("Document successfully updated!");
-              }).catch(function (error) {
-                console.error("Error removing document: ", error);
-              });
-            }
-            this.$emit('setRoomId', val);
-          })
-
-      }
+          if (this.roomData.user1.length == 0) {
+            db.collection('rooms').doc(val).update({
+              user1: this.playerName
+            }).then(() => {
+              console.log('Document successfully updated!')
+            }).catch(function (error) {
+              console.error('Error removing document: ', error)
+            })
+          } else if (this.roomData.user2.length == 0) {
+            db.collection('rooms').doc(val).update({
+              user2: this.playerName
+            }).then(() => {
+              console.log('Document successfully updated!')
+            }).catch(function (error) {
+              console.error('Error removing document: ', error)
+            })
+          }
+          this.$emit('setRoomId', val)
+        })
     }
   }
+}
 </script>
 
 <style scoped>
