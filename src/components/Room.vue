@@ -14,65 +14,65 @@
 </template>
 
 <script>
-  import Swal from 'sweetalert2'
-  import db from '../../config/connectionDb'
-  import {
-    log
-  } from 'util'
+import Swal from 'sweetalert2'
+import db from '../../config/connectionDb'
+import {
+  log
+} from 'util'
 
-  export default {
-    props: ['playerName'],
-    data() {
-      return {
-        players: [],
-        roomData: {},
-        showJoinModal: false,
-        playerAmount: 0
-      }
-    },
-    methods: {
-      addPlayerToRoom(val) {
-        if (this.playerName[0] == ' ' || this.playerName.length == 0) {
-          Swal.fire(
-          'Player 1 Win!',
-          'Back to homepage',
-          'error'
-          )
-          return ''
-        }
-
-        localStorage.setItem('roomId', this.roomData.id)
-        this.$emit('setRoomId', val)
-
-        if (this.roomData.user1.length == 0) {
-          db.collection('rooms').doc(val).update({
-            user1: this.playerName
-          }).then(() => {
-            console.log('Document successfully updated!')
-          }).catch(function (error) {
-            console.error('Error removing document: ', error)
-          })
-        } else if (this.roomData.user2.length == 0) {
-          db.collection('rooms').doc(val).update({
-            user2: this.playerName
-          }).then(() => {
-            console.log('Document successfully updated!')
-          }).catch(function (error) {
-            console.error('Error removing document: ', error)
-          })
-        }
-      }
-    },
-    created() {
-      db.collection('rooms').doc('FbAhLuiZM9HmdLjhAvgu')
-          .onSnapshot((doc) => {
-            this.roomData = {
-              id: doc.id,
-              ...doc.data()
-            }
-          })
+export default {
+  props: ['playerName'],
+  data () {
+    return {
+      players: [],
+      roomData: {},
+      showJoinModal: false,
+      playerAmount: 0
     }
+  },
+  methods: {
+    addPlayerToRoom (val) {
+      if (this.playerName[0] == ' ' || this.playerName.length == 0) {
+        Swal.fire(
+          'Name cannot be empty',
+          'Continue',
+          'error'
+        )
+        return ''
+      }
+
+      localStorage.setItem('roomId', this.roomData.id)
+      this.$emit('setRoomId', val)
+
+      if (this.roomData.user1.length == 0) {
+        db.collection('rooms').doc(val).update({
+          user1: this.playerName
+        }).then(() => {
+          console.log('Document successfully updated!')
+        }).catch(function (error) {
+          console.error('Error removing document: ', error)
+        })
+      } else if (this.roomData.user2.length == 0) {
+        db.collection('rooms').doc(val).update({
+          user2: this.playerName
+        }).then(() => {
+          console.log('Document successfully updated!')
+        }).catch(function (error) {
+          console.error('Error removing document: ', error)
+        })
+      }
+    }
+  },
+  created () {
+    db.collection('rooms').doc('FbAhLuiZM9HmdLjhAvgu')
+      .onSnapshot((doc) => {
+        this.roomData = {
+          id: doc.id,
+          ...doc.data()
+        }
+      })
   }
+}
 </script>
 
 <style scoped>

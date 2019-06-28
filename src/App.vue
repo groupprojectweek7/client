@@ -9,7 +9,15 @@
 </template>
 
 <script>
+import Homepage from '@/components/Homepage.vue'
+import Game from '@/components/Game.vue'
+
 export default {
+  name: 'App',
+  components: {
+    Homepage,
+    Game
+  },
   data () {
     return {
       roomId: null
