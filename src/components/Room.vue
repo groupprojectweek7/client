@@ -2,7 +2,7 @@
   <v-layout>
 
     <v-container grid-list-md text-xs-center>
-      <v-layout style="background-color: #34495E" class="py-5 px-5" row wrap>
+      <v-layout class="py-5 px-5 join-party-container" row wrap>
         <v-flex xs6>
           <v-card id="join-room-button" class="flex-card" height="200" @click="addPlayerToRoom('FbAhLuiZM9HmdLjhAvgu')">
             <h2 class="px-0 display-3" style="font-weight: bold; color:#ddd"> Join Party</h2>
