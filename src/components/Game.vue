@@ -3,7 +3,7 @@
     <v-layout row wrap>
       <v-flex xs12>
         <v-layout align-center justify-center>
-          <h1>Player1 :</h1>
+          <h1>Player1 : {{ player1 }}</h1>
         </v-layout>
       </v-flex>
       <v-flex xs12>
@@ -15,7 +15,7 @@
       </v-flex>
       <v-flex xs12>
         <v-layout align-center justify-center>
-          <h1>Player2 :</h1>
+          <h1>Player2 : {{ player2 }}</h1>
         </v-layout>
       </v-flex>
       <v-flex xs12>
@@ -79,7 +79,7 @@
           </v-flex>
         </v-layout>
         <v-layout row>
-          Player 1
+          {{ player1 }}
         </v-layout>
       </v-flex>
       <!-- Player 2 -->
@@ -134,7 +134,7 @@
           </v-flex>
         </v-layout>
         <v-layout row>
-          Player 2
+          {{ player2 }}
         </v-layout>
       </v-flex>
       <v-flex xs12>
@@ -151,8 +151,11 @@ import db from '../../config/connectionDb'
 import { setInterval } from 'timers'
 
 export default {
+  props: ['roomId'],
   data () {
     return {
+      player1: '',
+      player2: '',
       boxX: 0,
       boxY: 0,
       inputType1: '',
@@ -166,20 +169,23 @@ export default {
       currentWord2: '',
       showWinner: false,
       runTime: 100,
-      roomData: [],
-      roomId: '5xJVZvv9KvHfYuoamF4C'
+      roomData: []
     }
   },
   watch: {
     score1 () {
       if (this.score1 === this.wordApi.length || (this.score1 > this.score2 && this.runTime === 0)) {
         console.log('yang menang adalah player1')
-        this.clearRoom()
-        Swal.fire(
-          'Player 1 Win!',
-          'Back to homepage',
-          'success'
-        )
+        Swal.fire({
+          title: 'Player 1 Win',
+          text: "Back to homepage",
+          type: 'warning',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Back!'
+        }).then(() => {
+          this.clearRoom()
+          this.$emit('setRoomId', null)
+        })
       }
     },
 
@@ -240,7 +246,9 @@ export default {
         dictionaryApi: [],
         finishedUser1: [],
         finishedUser2: [],
-        statusStart: false
+        statusStart: false,
+        user1: '',
+        user2: ''
       }
       db.collection('rooms').doc(this.roomId).set(sendData)
         .then(() => {
@@ -249,6 +257,7 @@ export default {
           this.finishedUser2 = []
           this.score1 = 0
           this.score2 = 0
+          localStorage.removeItem('roomId')
           console.log('Success clear Room!')
         })
         .catch(function (error) {
@@ -265,14 +274,14 @@ export default {
     startGame () {
       axios({
         method: 'get',
-        url: 'https://random-word-api.herokuapp.com//word?key=4KSHTCFV&number=3'
+        url: 'https://random-word-api.herokuapp.com//word?key=5OIJBMZD&number=3'
       })
         .then(({ data }) => {
           let sendData = {
             dictionaryApi: data,
             statusStart: true,
             finishedUser1: [],
-            finishedUser2: []
+            finishedUser2: [],
           }
           return db.collection('rooms').doc(this.roomId).update(sendData)
         })
@@ -294,6 +303,8 @@ export default {
         this.wordApi = doc.data().dictionaryApi
         this.wordPlayer1 = doc.data().finishedUser1
         this.wordPlayer2 = doc.data().finishedUser2
+        this.player1 = doc.data().user1
+        this.player2 = doc.data().user2
         this.score1 = this.wordPlayer1.length
         this.score2 = this.wordPlayer2.length
         this.setCurrentWord(1)
