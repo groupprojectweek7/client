@@ -14,6 +14,7 @@
 </template>
 
 <script>
+  import Swal from 'sweetalert2'
   import db from '../../config/connectionDb'
   import {
     log
@@ -32,7 +33,11 @@
     methods: {
       addPlayerToRoom(val) {
         if (this.playerName[0] == ' ' || this.playerName.length == 0) {
-          // swal nama harus isi
+          Swal.fire(
+          'Player 1 Win!',
+          'Back to homepage',
+          'error'
+          )
           return ''
         }
 
