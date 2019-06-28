@@ -10,7 +10,6 @@
 <script>
 import Homepage from '@/components/Homepage.vue'
 import Game from '@/components/Game.vue'
-import db from '../config/connectionDb'
 
 export default {
   name: 'App',

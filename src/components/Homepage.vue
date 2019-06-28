@@ -9,20 +9,20 @@
 </template>
 
 <script>
-  import HeaderPage from './HeaderPage'
-  import Room from './Room'
+import HeaderPage from './HeaderPage'
+import Room from './Room'
 
-  export default {
-    components: {
-      HeaderPage,
-      Room
-    },
-    data() {
-      return {
-        playerName: ''
-      }
+export default {
+  components: {
+    HeaderPage,
+    Room
+  },
+  data () {
+    return {
+      playerName: ''
     }
   }
+}
 </script>
 
 <style>
@@ -36,7 +36,6 @@
     background-color: #41B883;
     color: white;
   }
-
 
   #join-room-button {
     background-color: #B71C1C;

@@ -8,25 +8,25 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        items: [{
-            src: 'https://radikalportal.no/wp-content/uploads/2018/03/Keyboard-warrior.jpg'
-          },
-          {
-            src: 'https://www.techadvisor.co.uk/cmsdata/features/3651757/how_to_type_faster_thumb800.jpg'
-          },
-          {
-            src: 'https://previews.123rf.com/images/maxpro/maxpro0904/maxpro090400002/4595510-fast-typing-on-laptop-keyboard.jpg'
-          },
-          {
-            src: 'https://i.ytimg.com/vi/QnFV5Lt4lq8/maxresdefault.jpg'
-          }
-        ]
+export default {
+  data () {
+    return {
+      items: [{
+        src: 'https://radikalportal.no/wp-content/uploads/2018/03/Keyboard-warrior.jpg'
+      },
+      {
+        src: 'https://www.techadvisor.co.uk/cmsdata/features/3651757/how_to_type_faster_thumb800.jpg'
+      },
+      {
+        src: 'https://previews.123rf.com/images/maxpro/maxpro0904/maxpro090400002/4595510-fast-typing-on-laptop-keyboard.jpg'
+      },
+      {
+        src: 'https://i.ytimg.com/vi/QnFV5Lt4lq8/maxresdefault.jpg'
       }
+      ]
     }
   }
+}
 </script>
 
 <style>
