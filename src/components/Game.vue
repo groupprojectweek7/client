@@ -178,26 +178,28 @@ export default {
         console.log('yang menang adalah player1')
         Swal.fire({
           title: 'Player 1 Win',
-          text: "Back to homepage",
+          text: 'Back to homepage',
           type: 'warning',
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Back!'
         }).then(() => {
           this.clearRoom()
-          this.$emit('setRoomId', null)
         })
       }
     },
 
     score2 () {
       if (this.score2 === this.wordApi.length || (this.score2 > this.score1 && this.runTime === 0)) {
-        console.log('yang menang adalah player1')
-        this.clearRoom()
-        Swal.fire(
-          'Player 2 Win!',
-          'Back to homepage',
-          'success'
-        )
+        console.log('yang menang adalah player2')
+        Swal.fire({
+          title: 'Player 2 Win',
+          text: 'Back to homepage',
+          type: 'warning',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Back!'
+        }).then(() => {
+          this.clearRoom()
+        })
       }
     },
 
@@ -207,7 +209,7 @@ export default {
         let sendData = {
           finishedUser1: this.wordPlayer1
         }
-        db.collection('rooms').doc(this.roomId).update(sendData)
+        db.collection('rooms').doc(this.$store.state.selectedRoomData.id).update(sendData)
           .then(() => {
             this.inputType1 = ''
             this.setCurrentWord(1)
@@ -223,7 +225,7 @@ export default {
         let sendData = {
           finishedUser2: this.wordPlayer2
         }
-        db.collection('rooms').doc(this.roomId).update(sendData)
+        db.collection('rooms').doc(this.$store.state.selectedRoomData).update(sendData)
           .then(() => {
             this.inputType2 = ''
             this.setCurrentWord(2)
@@ -250,14 +252,24 @@ export default {
         user1: '',
         user2: ''
       }
-      db.collection('rooms').doc(this.roomId).set(sendData)
+      db.collection('rooms').doc(this.$store.state.selectedRoomData.id).set(sendData)
         .then(() => {
           this.wordApi = []
           this.finishedUser1 = []
           this.finishedUser2 = []
           this.score1 = 0
           this.score2 = 0
-          localStorage.removeItem('roomId')
+          this.$store.state.selectedRoomData.id = ''
+          this.$store.commit('setSelectedRoomData', {
+            id: '',
+            dictionaryApi: [],
+            statusStart: true,
+            finishedUser1: [],
+            finishedUser2: [],
+            user1: '',
+            user2: ''
+          })
+          this.$store.commit('setCurrentpage', 'homepage')
           console.log('Success clear Room!')
         })
         .catch(function (error) {
@@ -281,9 +293,10 @@ export default {
             dictionaryApi: data,
             statusStart: true,
             finishedUser1: [],
-            finishedUser2: [],
+            finishedUser2: []
           }
-          return db.collection('rooms').doc(this.roomId).update(sendData)
+          console.log('ini selected di start game', this.$store.state.selectedRoomData)
+          return db.collection('rooms').doc(this.$store.state.selectedRoomData.id).update(sendData)
         })
         .then(() => {
           this.score1 = 0
@@ -297,7 +310,7 @@ export default {
     }
   },
   created () {
-    db.collection('rooms').doc(this.roomId)
+    db.collection('rooms').doc(this.$store.state.selectedRoomData.id)
       .onSnapshot((doc) => {
         console.log('masuk created berapa kali')
         this.wordApi = doc.data().dictionaryApi
