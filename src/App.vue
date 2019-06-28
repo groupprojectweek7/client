@@ -1,46 +1,48 @@
 <template>
   <v-app>
     <v-content>
-      <Homepage v-if="!roomId" @setRoomId="setRoomId"></Homepage>
-      <Game v-if="roomId"></Game>
+      <Homepage v-if="$store.state.currentPage === 'homepage'"></Homepage>
+      <Game v-if="$store.state.currentPage === 'game'"></Game>
     </v-content>
   </v-app>
 
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        value: 0,
-        query: false,
-        show: true,
-        interval: 0,
-        activeColor: "green",
-        start: false,
-      }
-    },
+import Homepage from '@/components/Homepage.vue'
+import Game from '@/components/Game.vue'
+import db from '../config/connectionDb'
 
-    mounted() {
-      this.queryAndIndeterminate()
-    },
-
-    beforeDestroy() {
-      clearInterval(this.interval)
-    },
-
-    data() {
-      return {
-        roomId: null
-      }
-    },
-    methods: {
-      setRoomId(id) {
-        this.roomId = id
-      }
-    },
-    created() {
-      this.roomId = localStorage.getItem('roomId')
+export default {
+  components: {
+    Homepage,
+    Game
+  },
+  data () {
+    return {
+      roomId: null
     }
+  },
+  methods: {
+    setRoomId (id) {
+      this.roomId = id
+    }
+  },
+  watch: {
+    '$store.state.selectedRoomData' () {
+      this.roomId = this.$store.state.selectedRoomData.id
+    }
+  },
+  created () {
+    // this.roomId = localStorage.getItem('roomId')
+    db.collection('rooms').doc('sJGQdlCtCSKqNjUrpINk')
+      .onSnapshot((doc) => {
+        console.log('ada perubahan', doc.data())
+        this.$store.state.selectedRoomData = {
+          id: doc.id,
+          ...doc.data()
+        }
+      })
   }
+}
 </script>
