@@ -10,36 +10,37 @@
 
 <script>
   export default {
-    data () {
+    data() {
       return {
         value: 0,
-      query: false,
-      show: true,
-      interval: 0,
-      activeColor:"green",
-      start: false,
-    }
-  },
+        query: false,
+        show: true,
+        interval: 0,
+        activeColor: "green",
+        start: false,
+      }
+    },
 
-  mounted () {
-    this.queryAndIndeterminate()
-  },
+    mounted() {
+      this.queryAndIndeterminate()
+    },
 
-  beforeDestroy () {
-    clearInterval(this.interval)
-  },
+    beforeDestroy() {
+      clearInterval(this.interval)
+    },
 
-  data () {
-    return {
-      roomId: null
+    data() {
+      return {
+        roomId: null
+      }
+    },
+    methods: {
+      setRoomId(id) {
+        this.roomId = id
+      }
+    },
+    created() {
+      this.roomId = localStorage.getItem('roomId')
     }
-  },
-  methods: {
-    setRoomId (id) {
-      this.roomId = id
-    }
-  },
-  created () {
-    this.roomId = localStorage.getItem('roomId')
   }
 </script>
