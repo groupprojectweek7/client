@@ -3,7 +3,7 @@
     <HeaderPage :playerName="playerName"></HeaderPage>
     <v-container>
     <v-text-field v-model="playerName" id="text-input-style" label="Name" placeholder="Insert Name Here" required box></v-text-field></v-container>
-    <Room :playerName="playerName"></Room>
+    <Room :playerName="playerName" @setRoomId="setRoomId"></Room>
   </div>
 
 </template>
@@ -21,21 +21,16 @@ export default {
     return {
       playerName: ''
     }
+  },
+  methods: {
+    setRoomId(val) {
+      this.$emit('setRoomId', val);
+    }
   }
 }
 </script>
 
 <style>
-  .flex-card{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .flex-card:hover {
-    background-color: #41B883;
-    color: white;
-  }
 
   #join-room-button {
     background-color: #B71C1C;

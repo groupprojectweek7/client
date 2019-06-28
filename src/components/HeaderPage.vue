@@ -3,7 +3,7 @@
     <v-carousel>
       <v-carousel-item v-for="(item,i) in items" :key="i" :src="item.src"></v-carousel-item>
     </v-carousel>
-    <h2 style="text-align: center;   font-weight: bold" class="my-3 display-3">Welcome to Typing War</h2>
+    <h2 style="text-align: center;   font-weight: bold" class="my-3 display-3">Welcome to Typing Battle</h2>
   </v-container>
 </template>
 
