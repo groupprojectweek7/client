@@ -148,10 +148,13 @@
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import db from '../../config/connectionDb'
+import { setInterval } from 'timers'
 
 export default {
   data () {
     return {
+      boxX: 0,
+      boxY: 0,
       inputType1: '',
       inputType2: '',
       score1: 0,
@@ -226,6 +229,12 @@ export default {
     }
   },
   methods: {
+    calcPosition () {
+      return {
+        top: (Math.random(0, 230)) + 'px',
+        left: (Math.random(0, 210)) + 'px'
+      }
+    },
     clearRoom () {
       let sendData = {
         dictionaryApi: [],
@@ -256,7 +265,7 @@ export default {
     startGame () {
       axios({
         method: 'get',
-        url: 'https://random-word-api.herokuapp.com//word?key=MHFSZA9O&number=3'
+        url: 'https://random-word-api.herokuapp.com//word?key=4KSHTCFV&number=3'
       })
         .then(({ data }) => {
           let sendData = {
@@ -290,10 +299,25 @@ export default {
         this.setCurrentWord(1)
         this.setCurrentWord(2)
       })
+  },
+  mounted () {
+    console.log('masuk berapa kali')
+    setInterval(() => {
+      this.calcPosition()
+    }, 100)
   }
 }
 </script>
 
 <style>
-
+#box-words {
+  width: 100%;
+  height: 300px;
+}
+.box {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  background: #54E365;
+}
 </style>
