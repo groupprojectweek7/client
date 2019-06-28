@@ -89,4 +89,11 @@ export default {
     cursor: pointer;
     color: white;
   }
+
+  .join-party-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #34495E
+  }
 </style>
